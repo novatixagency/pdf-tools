@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Novatix PDF Tools</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta name="description" content="Log in or create your free Novatix PDF Tools account. 50 free PDF operations per day, 100% private — files never leave your browser.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.png" type="image/png">
+<style>
+:root{
+  --bg:#0A0F1D; --bg2:#0d1424; --card:#111a2e; --card2:#0f1729;
+  --border:#1e2a44; --text:#e8eef7; --muted:#8b98b0;
+  --teal:#14B8A6; --teal-d:#0d9488; --copper:#F97316; --copper-d:#ea6a0a;
+  --danger:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:24px 16px; position:relative; overflow-x:hidden;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(20,184,166,.14), transparent),
+    radial-gradient(ellipse 50% 40% at 85% 110%, rgba(249,115,22,.08), transparent);
+}
+.wrap{position:relative; z-index:1; width:100%; max-width:420px}
+.brand{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:28px; text-decoration:none; color:var(--text)}
+.brand img{width:40px; height:40px; border-radius:10px}
+.brand .bt{font-size:1.25rem; font-weight:800; letter-spacing:-.02em}
+.brand .bt span{color:var(--teal)}
+.card{
+  background:linear-gradient(180deg, var(--card), var(--card2));
+  border:1px solid var(--border); border-radius:20px; padding:34px 30px;
+  box-shadow:0 24px 64px rgba(0,0,0,.5);
+}
+.tabs{display:flex; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:24px}
+.tabs button{
+  flex:1; padding:10px; border:none; background:none; color:var(--muted);
+  font-size:.92rem; font-weight:600; border-radius:9px; cursor:pointer; transition:all .2s;
+  font-family:inherit;
+}
+.tabs button.on{background:var(--teal); color:#04211d}
+.card h1{font-size:1.45rem; font-weight:800; letter-spacing:-.02em; margin-bottom:6px}
+.card .sub{color:var(--muted); font-size:.88rem; margin-bottom:22px}
+.field{margin-bottom:16px}
+.field label{display:block; font-size:.82rem; font-weight:600; color:var(--muted); margin-bottom:7px}
+.field input{
+  width:100%; padding:12px 14px; background:var(--bg2); border:1px solid var(--border);
+  border-radius:10px; color:var(--text); font-size:.95rem; font-family:inherit; outline:none; transition:border .2s;
+}
+.field input:focus{border-color:var(--teal); box-shadow:0 0 0 3px rgba(20,184,166,.15)}
+.capwrap{display:flex; gap:10px; align-items:center; margin-bottom:16px}
+.capwrap canvas{border:1px solid var(--border); border-radius:10px; cursor:pointer; background:#0a0e14; flex-shrink:0; max-width:44%; height:auto}
+.capwrap input{
+  flex:1; min-width:0; padding:12px 14px; background:var(--bg2); border:1px solid var(--border);
+  border-radius:10px; color:var(--text); font-size:.95rem; font-family:inherit; outline:none;
+  text-transform:uppercase; letter-spacing:.15em;
+}
+.capwrap input:focus{border-color:var(--teal)}
+.err{
+  display:none; background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.35);
+  color:#fca5a5; font-size:.85rem; padding:10px 12px; border-radius:10px; margin-bottom:16px;
+}
+.err.on{display:block}
+.lockmsg{display:none; color:#fbbf24; font-size:.82rem; margin-bottom:16px}
+.lockmsg.on{display:block}
+.submit{
+  width:100%; padding:13px; border:none; border-radius:12px; cursor:pointer;
+  background:linear-gradient(135deg, var(--teal), var(--teal-d)); color:#04211d;
+  font-size:1rem; font-weight:700; font-family:inherit; transition:transform .15s, opacity .2s;
+}
+.submit:hover:not(:disabled){transform:translateY(-1px)}
+.submit:disabled{opacity:.5; cursor:not-allowed}
+.divider{display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--muted); font-size:.8rem}
+.divider::before,.divider::after{content:''; flex:1; height:1px; background:var(--border)}
+.oauth{display:flex; gap:10px}
+.oauth .oauthbtn{
+  flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:11px; background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+  color:var(--text); font-size:.88rem; font-weight:600; font-family:inherit; cursor:pointer; transition:border .2s;
+}
+.oauth .oauthbtn:hover{border-color:var(--teal)}
+.oauth .oauthbtn:disabled{opacity:.5; cursor:not-allowed}
+.back{text-align:center; margin-top:20px}
+.back a{color:var(--muted); font-size:.85rem; text-decoration:none}
+.back a:hover{color:var(--teal)}
+.priv{text-align:center; margin-top:14px; color:var(--muted); font-size:.75rem; display:flex; align-items:center; justify-content:center; gap:6px}
+@media(max-width:480px){ .card{padding:26px 20px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="/">
+    <img src="/favicon.png" alt="Novatix">
+    <span class="bt">Novatix <span>PDF Tools</span></span>
+  </a>
+  <div class="card">
+    <div class="tabs">
+      <button id="tabLogin" class="on" type="button">Log In</button>
+      <button id="tabSignup" type="button">Sign Up</button>
+    </div>
+    <h1 id="title">Welcome back</h1>
+    <p class="sub" id="subtitle">Log in to get 50 free PDF operations per day.</p>
+    <div class="err" id="err"></div>
+    <div class="lockmsg" id="lockmsg"></div>
+    <form id="authForm" autocomplete="on">
+      <div class="field" id="nameField" style="display:none">
+        <label for="authName">Your name</label>
+        <input id="authName" type="text" placeholder="e.g. Hammad Ahmad" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="authEmail">Email address</label>
+        <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="authPass">Password</label>
+        <input id="authPass" type="password" placeholder="••••••••" autocomplete="current-password" required minlength="6">
+        <div style="text-align:right;margin-top:6px"><a href="#" id="forgotLink" style="color:var(--teal);font-size:.82rem;text-decoration:none">Forgot password?</a></div>
+      </div>
+      <div class="capwrap">
+        <canvas id="captchaCanvas" width="150" height="48" title="Click for a new code"></canvas>
+        <input id="captchaInput" placeholder="CODE" maxlength="5" autocomplete="off" aria-label="Security code">
+      </div>
+      <button class="submit" id="submitBtn" type="submit">Log In</button>
+    </form>
+    <!-- Forgot password view -->
+    <form id="forgotForm" style="display:none" autocomplete="on">
+      <p class="sub">Enter your email and we'll send you a reset link.</p>
+      <div class="field">
+        <label for="forgotEmail">Email address</label>
+        <input id="forgotEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <button class="submit" id="forgotBtn" type="submit">Send Reset Link</button>
+      <div style="text-align:center;margin-top:12px"><a href="#" id="backToLogin" style="color:var(--muted);font-size:.85rem;text-decoration:none">&larr; Back to log in</a></div>
+    </form>
+    <!-- Reset password view (from email link) -->
+    <form id="resetForm" style="display:none" autocomplete="on">
+      <p class="sub">Choose a new password.</p>
+      <div class="field">
+        <label for="newPass">New password</label>
+        <input id="newPass" type="password" placeholder="••••••••" autocomplete="new-password" required minlength="6">
+      </div>
+      <div class="field">
+        <label for="newPass2">Confirm new password</label>
+        <input id="newPass2" type="password" placeholder="••••••••" autocomplete="new-password" required minlength="6">
+      </div>
+      <button class="submit" id="resetBtn" type="submit">Set New Password</button>
+    </form>
+    <div class="divider" id="oauthDivider">or continue with</div>
+    <div class="oauth">
+      <button type="button" id="googleBtn" class="oauthbtn">G&nbsp; Google</button>
+      <button type="button" id="githubBtn" class="oauthbtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>&nbsp; GitHub</button>
+    </div>
+  </div>
+  <div class="back"><a href="/">&larr; Back to PDF Tools</a></div>
+  <div class="priv">&#128274; Your files never leave your browser. 100% private.</div>
+</div>
+<script>
+(function(){
+'use strict';
+var API='https://novatix.agency/api/v1/auth.php';
+var TOKEN_KEY='novatix_tool_token', EMAIL_KEY='novatix_tool_email';
+var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+/* ---------- return target ---------- */
+function getNext(){
+  try{
+    var p=new URLSearchParams(window.location.search);
+    var n=p.get('next');
+    if(n){
+      var u=new URL(n, window.location.origin);
+      var h=u.hostname.toLowerCase();
+      if((u.protocol==='https:'||u.protocol==='http:')&&(h==='novatix.agency'||h.endsWith('.novatix.agency'))) return u.href;
+    }
+  }catch(e){}
+  return '/app.html';
+}
+
+/* ---------- session ---------- */
+function getCookie(name){
+  try{var m=document.cookie.match(new RegExp('(?:^|;\\s*)'+name+'=([^;]*)'));return m&&m[1]?decodeURIComponent(m[1]):'';}catch(e){return '';}
+}
+function loggedIn(){ return !!(getCookie(TOKEN_KEY)||localStorage.getItem(TOKEN_KEY)); }
+if(loggedIn()){ window.location.replace(getNext()); }
+
+/* ---------- tabs ---------- */
+var mode='login';
+var tabL=document.getElementById('tabLogin'), tabS=document.getElementById('tabSignup');
+function setMode(m){
+  mode=(m==='signup')?'signup':'login';
+  var isL=mode==='login';
+  tabL.classList.toggle('on',isL); tabS.classList.toggle('on',!isL);
+  document.getElementById('title').textContent=isL?'Welcome back':'Create free account';
+  document.getElementById('subtitle').textContent=isL?'Log in to get 50 free PDF operations per day.':'Sign up free — 50 PDF operations per day, no credit card.';
+  document.getElementById('submitBtn').textContent=isL?'Log In':'Sign Up Free';
+  document.getElementById('nameField').style.display=isL?'none':'block';
+  document.getElementById('authPass').setAttribute('autocomplete',isL?'current-password':'new-password');
+  setErr('');
+}
+tabL.addEventListener('click',function(){setMode('login');});
+tabS.addEventListener('click',function(){setMode('signup');});
+try{ if(new URLSearchParams(window.location.search).get('mode')==='signup') setMode('signup'); }catch(e){}
+
+/* ---------- CAPTCHA ---------- */
+var CLEN=5, CCHARS='ABCDEFGHJKMNPQRSTUVWXYZ23456789', MAXF=5, LOCKMS=5*60*1000;
+var code='', fails=0, lockUntil=0, lockTimer=null;
+function ri(n){ if(window.crypto&&crypto.getRandomValues){var a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n;} return Math.floor(Math.random()*n); }
+function drawCaptcha(){
+  var cv=document.getElementById('captchaCanvas'); if(!cv||!cv.getContext) return;
+  code=''; for(var i=0;i<CLEN;i++) code+=CCHARS[ri(CCHARS.length)];
+  var ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e14'; ctx.fillRect(0,0,W,H);
+  for(var d=0;d<50;d++){ ctx.fillStyle='rgba(45,212,191,'+(0.08+Math.random()*0.15).toFixed(2)+')'; ctx.beginPath(); ctx.arc(ri(W),ri(H),1+Math.random()*1.6,0,7); ctx.fill(); }
+  var step=W/(CLEN+0.5), shades=['#2dd4bf','#5eead4','#99f6e4'];
+  for(var c=0;c<CLEN;c++){
+    ctx.save(); ctx.translate(step*(c+0.75), H/2+(ri(9)-4)); ctx.rotate((ri(31)-15)*Math.PI/180);
+    ctx.font='bold 28px "Segoe UI",system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle=shades[ri(shades.length)]; ctx.fillText(code[c],0,0); ctx.restore();
+  }
+  for(var k=0;k<3;k++){ ctx.strokeStyle='rgba(251,146,60,'+(0.25+Math.random()*0.25).toFixed(2)+')'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(ri(W),ri(H)); ctx.bezierCurveTo(ri(W),ri(H),ri(W),ri(H),ri(W),ri(H)); ctx.stroke(); }
+}
+document.getElementById('captchaCanvas').addEventListener('click',drawCaptcha);
+function locked(){ return Date.now()<lockUntil; }
+function lockUI(){
+  var lm=document.getElementById('lockmsg'), btn=document.getElementById('submitBtn');
+  if(locked()){
+    var s=Math.ceil((lockUntil-Date.now())/1000);
+    lm.textContent='Too many failed attempts. Try again in '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+'.';
+    lm.classList.add('on'); btn.disabled=true; return true;
+  }
+  lm.classList.remove('on'); return false;
+}
+function startLock(){
+  lockUI();
+  lockTimer=setInterval(function(){
+    if(!locked()){ clearInterval(lockTimer); lockTimer=null; document.getElementById('lockmsg').classList.remove('on'); document.getElementById('submitBtn').disabled=false; drawCaptcha(); document.getElementById('captchaInput').value=''; }
+    else lockUI();
+  },1000);
+}
+function fail(){
+  fails++;
+  if(fails>=MAXF){ fails=0; lockUntil=Date.now()+LOCKMS; startLock(); return true; }
+  return false;
+}
+
+/* ---------- helpers ---------- */
+function setErr(m){ var e=document.getElementById('err'); e.textContent=m||''; e.classList.toggle('on',!!m); }
+function saveSession(t,em){
+  try{ localStorage.setItem(TOKEN_KEY,t); localStorage.setItem(EMAIL_KEY,em||''); }catch(e){}
+}
+
+/* ---------- OAuth: Google (GIS, stays on this subdomain) ---------- */
+var GOOGLE_CLIENT_ID='802660333247-lgj74hj9pbnqqvjebikn9oh114m2k9mo.apps.googleusercontent.com';
+document.getElementById('googleBtn').addEventListener('click',function(){
+  setErr('');
+  if(!window.google||!google.accounts||!google.accounts.id){
+    setErr('Google sign-in is still loading, please wait a moment and try again.');
+    return;
+  }
+  var btn=this; btn.disabled=true;
+  try{
+    google.accounts.id.initialize({
+      client_id:GOOGLE_CLIENT_ID,
+      callback:function(resp){
+        if(!resp||!resp.credential){ setErr('Google sign-in failed. Please try again.'); btn.disabled=false; return; }
+        fetch(API,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'google',id_token:resp.credential})})
+        .then(function(r){return r.json();})
+        .then(function(d){
+          btn.disabled=false;
+          if(d&&d.ok&&d.token){
+            saveSession(d.token,d.user&&d.user.email);
+            window.location.replace(getNext());
+          }else{
+            setErr('Google sign-in failed. Please try again.');
+          }
+        })
+        .catch(function(){ btn.disabled=false; setErr('Network error. Please try again.'); });
+      }
+    });
+    google.accounts.id.prompt();
+    setTimeout(function(){ btn.disabled=false; },8000);
+  }catch(e){ btn.disabled=false; setErr('Google sign-in failed. Please try again.'); }
+});
+
+/* ---------- OAuth: GitHub (via /oauth/callback.php, stays on subdomain) ---------- */
+var GITHUB_CLIENT_ID='Ov23liGTDZb3xxGef4Im';
+document.getElementById('githubBtn').addEventListener('click',function(){
+  setErr('');
+  var st='';
+  try{
+    var a=new Uint8Array(16); (window.crypto||{}).getRandomValues(a);
+    st=Array.prototype.map.call(a,function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
+  }catch(e){ st=String(Date.now())+String(Math.random()).slice(2); }
+  try{
+    document.cookie='pdf_oauth_state='+encodeURIComponent(st)+'; path=/; max-age=600; secure; samesite=lax';
+    document.cookie='pdf_oauth_next='+encodeURIComponent(getNext())+'; path=/; max-age=600; secure; samesite=lax';
+  }catch(e){}
+  var url='https://github.com/login/oauth/authorize?client_id='+encodeURIComponent(GITHUB_CLIENT_ID)
+    +'&redirect_uri='+encodeURIComponent('https://pdf.novatix.agency/oauth/callback.php')
+    +'&scope=user:email&state='+encodeURIComponent(st);
+  window.location.href=url;
+});
+
+/* ---------- Forgot password ---------- */
+function showForgot(){
+  setErr('');
+  document.getElementById('authForm').style.display='none';
+  document.getElementById('forgotForm').style.display='block';
+  document.getElementById('oauthDivider').style.display='none';
+  document.getElementById('googleBtn').style.display='none';
+  document.getElementById('githubBtn').style.display='none';
+  var t=document.querySelector('.card h1'); if(t) t.textContent='Reset password';
+  var s=document.getElementById('subtitle'); if(s) s.textContent='We\'ll email you a reset link.';
+}
+function showLogin(){
+  setErr('');
+  document.getElementById('authForm').style.display='block';
+  document.getElementById('forgotForm').style.display='none';
+  document.getElementById('resetForm').style.display='none';
+  document.getElementById('oauthDivider').style.display='flex';
+  document.getElementById('googleBtn').style.display='flex';
+  document.getElementById('githubBtn').style.display='flex';
+  var t=document.querySelector('.card h1'); if(t) t.textContent=(mode==='signup'?'Create your account':'Welcome back');
+}
+document.getElementById('forgotLink').addEventListener('click',function(e){ e.preventDefault(); showForgot(); });
+document.getElementById('backToLogin').addEventListener('click',function(e){ e.preventDefault(); showLogin(); });
+document.getElementById('forgotForm').addEventListener('submit',function(ev){
+  ev.preventDefault(); setErr('');
+  var em=document.getElementById('forgotEmail').value.trim();
+  if(!EMAIL_RE.test(em)){ setErr('Please enter a valid email address.'); return; }
+  var btn=document.getElementById('forgotBtn'); btn.disabled=true; btn.textContent='Sending…';
+  fetch(API,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'forgot_password',email:em,source:'pdf'})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    btn.disabled=false; btn.textContent='Send Reset Link';
+    if(d&&d.ok){
+      setErr('');
+      document.getElementById('forgotForm').innerHTML='<p class="sub" style="text-align:center;padding:20px 0">✓ Check your email for the reset link.<br><span style="font-size:.82rem">It expires in 1 hour.</span></p>';
+    }else{ setErr((d&&(d.error||d.message))||'Something went wrong. Please try again.'); }
+  })
+  .catch(function(){ btn.disabled=false; btn.textContent='Send Reset Link'; setErr('Network error. Please try again.'); });
+});
+
+/* ---------- Reset password (from email link ?reset_token=) ---------- */
+(function(){
+  var rt='';
+  try{ rt=new URLSearchParams(window.location.search).get('reset_token')||''; }catch(e){}
+  if(!rt) return;
+  // Hide normal login, show reset form
+  document.getElementById('authForm').style.display='none';
+  document.getElementById('resetForm').style.display='block';
+  document.getElementById('oauthDivider').style.display='none';
+  document.getElementById('googleBtn').style.display='none';
+  document.getElementById('githubBtn').style.display='none';
+  var fl=document.getElementById('forgotLink'); if(fl) fl.style.display='none';
+  var t=document.querySelector('.card h1'); if(t) t.textContent='Set new password';
+  var s=document.getElementById('subtitle'); if(s) s.textContent='Choose a new password for your account.';
+  document.getElementById('resetForm').addEventListener('submit',function(ev){
+    ev.preventDefault(); setErr('');
+    var p1=document.getElementById('newPass').value, p2=document.getElementById('newPass2').value;
+    if(p1.length<6){ setErr('Password must be at least 6 characters.'); return; }
+    if(p1!==p2){ setErr('Passwords do not match.'); return; }
+    var btn=document.getElementById('resetBtn'); btn.disabled=true; btn.textContent='Saving…';
+    fetch(API,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'reset_password',token:rt,password:p1})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.disabled=false; btn.textContent='Set New Password';
+      if(d&&d.ok){
+        document.getElementById('resetForm').innerHTML='<p class="sub" style="text-align:center;padding:20px 0">✓ Password updated!<br><a href="/login.html" style="color:var(--teal)">Log in with your new password</a></p>';
+      }else{ setErr((d&&(d.error||d.message))||'This link is invalid or has expired.'); }
+    })
+    .catch(function(){ btn.disabled=false; btn.textContent='Set New Password'; setErr('Network error. Please try again.'); });
+  });
+})();
+
+/* ---------- submit ---------- */
+drawCaptcha();
+document.getElementById('authForm').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  if(lockUI()) return;
+  var em=document.getElementById('authEmail').value.trim();
+  var pw=document.getElementById('authPass').value;
+  var nm=document.getElementById('authName').value.trim();
+  if(!EMAIL_RE.test(em)){ setErr('Please enter a valid email address.'); return; }
+  if(pw.length<6){ setErr('Password must be at least 6 characters.'); return; }
+  var ci=document.getElementById('captchaInput').value.trim().toUpperCase().replace(/\s+/g,'');
+  if(ci.length!==CLEN||ci!==code){ setErr('Incorrect security code. Please try again.'); document.getElementById('captchaInput').value=''; drawCaptcha(); fail(); return; }
+  var btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Please wait…'; setErr('');
+  var body=mode==='login'?{action:'login',email:em,password:pw}:{action:'signup',email:em,password:pw,name:nm};
+  fetch(API,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data&&data.ok&&data.token){
+        saveSession(data.token,(data.user&&data.user.email)||em);
+        window.location.replace(getNext());
+      }else{
+        setErr((data&&(data.error||data.message))||'Authentication failed. Please try again.');
+        document.getElementById('captchaInput').value=''; drawCaptcha(); fail();
+        btn.disabled=false; btn.textContent=mode==='login'?'Log In':'Sign Up Free';
+      }
+    })
+    .catch(function(){
+      setErr('Network error. Please check your connection and try again.');
+      btn.disabled=false; btn.textContent=mode==='login'?'Log In':'Sign Up Free';
+    });
+});
+})();
+</script>
+</body>
+</html>

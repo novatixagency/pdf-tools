@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Novatix PDF Tools</title>
+<meta name="description" content="Your Novatix PDF Tools dashboard — AI chat, files, media and all PDF tools in one place.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090e1c; --surface:#0e1321; --s2:#161b2a; --s3:#1a1f2e; --s4:#252a39;
+  --teal:#14b8a6; --teal-b:#4fdbc8; --teal-d:#0d7a78;
+  --org:#f97316; --org-d:#ec6a06;
+  --txt:#dee2f6; --muted:#9aa8b8; --muted2:#64748b;
+  --border:#232b3d; --r:14px;
+  --font:'Inter',system-ui,sans-serif; --disp:'Plus Jakarta Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2a3448;border-radius:8px}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font);cursor:pointer}
+input,textarea,select{font-family:var(--font)}
+
+/* ---------- Onboarding ---------- */
+#onboarding{position:fixed;inset:0;z-index:200;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(20,184,166,.08),var(--bg) 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#onboarding.hidden{display:none}
+.ob-card{width:100%;max-width:640px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.ob-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.ob-logo{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:18px}
+.ob-logo img{height:32px}
+.ob-steps{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.ob-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--s2);border:1px solid var(--border)}
+.ob-step.on{background:var(--teal);color:#04292a;border-color:var(--teal);font-weight:600}
+.ob-step .n{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ob-step.on .n{background:rgba(0,0,0,.18)}
+.ob-bar{height:4px;background:var(--s2);border-radius:99px;margin-bottom:28px;overflow:hidden}
+.ob-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--org));border-radius:99px;transition:width .4s}
+.ob-kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-b);font-weight:700;margin-bottom:8px}
+.ob-h{font-family:var(--disp);font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.ob-p{color:var(--muted);margin-bottom:24px;line-height:1.6}
+.ob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.ob-card-opt{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r);padding:20px 14px;text-align:left;color:var(--txt);transition:.2s;position:relative}
+.ob-card-opt:hover{border-color:#3a455c;transform:translateY(-2px)}
+.ob-card-opt.sel{border-color:var(--teal);background:rgba(20,184,166,.08)}
+.ob-card-opt .tick{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#04292a;display:none;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.ob-card-opt.sel .tick{display:flex}
+.ob-card-opt .ic{font-size:26px;margin-bottom:12px}
+.ob-card-opt h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.ob-card-opt p{font-size:11.5px;color:var(--muted);line-height:1.45}
+.ob-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.ob-row{display:flex;align-items:center;gap:14px;background:var(--s2);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px;color:var(--txt);font-size:15px;font-weight:500;text-align:left;transition:.2s;width:100%}
+.ob-row:hover{border-color:#3a455c}
+.ob-row.sel{border-color:var(--teal);background:rgba(20,184,166,.08)}
+.ob-row .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--muted2);flex-shrink:0;position:relative}
+.ob-row.sel .dot{border-color:var(--teal)}
+.ob-row.sel .dot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--teal)}
+.ob-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.ob-chip{background:var(--s2);border:1.5px solid var(--border);border-radius:99px;padding:10px 18px;color:var(--txt);font-size:13.5px;font-weight:500;transition:.2s}
+.ob-chip:hover{border-color:#3a455c}
+.ob-chip.sel{border-color:var(--teal);background:rgba(20,184,166,.12);color:var(--teal-b)}
+.ob-foot{display:flex;align-items:center;justify-content:space-between}
+.ob-skip{background:none;border:none;color:var(--muted);font-size:13.5px}
+.ob-skip:hover{color:var(--txt);text-decoration:underline}
+.btn-grad{background:linear-gradient(90deg,var(--teal),var(--org));color:#fff;border:none;border-radius:12px;padding:13px 28px;font-size:14.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;transition:.2s;box-shadow:0 4px 20px rgba(20,184,166,.25)}
+.btn-grad:hover{transform:translateY(-1px);box-shadow:0 6px 26px rgba(20,184,166,.35)}
+.btn-grad:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ---------- App shell ---------- */
+#app{display:none;min-height:100vh}
+#app.ready{display:block}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--surface);border-right:1px solid var(--border);z-index:50;display:flex;flex-direction:column;padding:20px 14px}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:4px 10px 20px;font-family:var(--disp);font-weight:700;font-size:17px}
+.sb-logo img{height:30px}
+.sb-nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:var(--muted);font-size:14px;font-weight:500;border:none;background:none;width:100%;text-align:left;transition:.15s}
+.sb-link:hover{background:var(--s3);color:var(--txt)}
+.sb-link.on{background:var(--teal);color:#04292a;font-weight:600}
+.sb-link .mi{font-size:19px;width:24px;text-align:center}
+.sb-profile{margin-top:12px;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;width:100%;color:var(--txt);text-align:left;transition:.15s}
+.sb-profile:hover{background:var(--s3)}
+.avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#04292a;background:linear-gradient(135deg,var(--teal-b),var(--teal));overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.sb-profile .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.sb-profile .em{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.main{margin-left:240px;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(9,14,28,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tb-search{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;min-width:280px;color:var(--muted);font-size:13px}
+.tb-search input{background:none;border:none;outline:none;color:var(--txt);font-size:13px;width:100%}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:38px;height:38px;border-radius:10px;background:var(--s2);border:1px solid var(--border);color:var(--muted);font-size:17px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.tb-btn:hover{color:var(--txt);border-color:#3a455c}
+.view{display:none;padding:32px;max-width:1180px;margin:0 auto;animation:fade .25s}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.crumbs b{color:var(--teal-b);font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;background:var(--s3);border:1px solid var(--border);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.pill .d{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pl 2s infinite}
+@keyframes pl{50%{opacity:.4}}
+h1.vt{font-family:var(--disp);font-size:32px;font-weight:700;letter-spacing:-.02em;margin:10px 0 8px}
+h1.vt .gr{background:linear-gradient(90deg,var(--teal-b),var(--org));-webkit-background-clip:text;background-clip:text;color:transparent}
+.vsub{color:var(--muted);font-size:14.5px;line-height:1.65;max-width:640px}
+
+/* AI Chat */
+.chat-box{max-width:780px;margin:28px auto 0;position:relative}
+.chat-glow{position:absolute;inset:-2px;border-radius:18px;background:linear-gradient(90deg,rgba(20,184,166,.25),rgba(249,115,22,.15));filter:blur(14px);opacity:.5;pointer-events:none}
+.chat-in{position:relative;background:var(--s3);border:1px solid var(--border);border-radius:16px;padding:18px}
+.chat-in textarea{width:100%;background:none;border:none;outline:none;resize:none;color:var(--txt);font-size:14.5px;min-height:88px;line-height:1.6}
+.chat-in textarea::placeholder{color:var(--muted2)}
+.chat-bar{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px}
+.chat-tools{display:flex;gap:8px;align-items:center}
+.chip-btn{display:inline-flex;align-items:center;gap:7px;background:var(--s4);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:500;transition:.15s}
+.chip-btn:hover{border-color:var(--teal)}
+.chat-hint{font-size:11.5px;color:var(--muted2)}
+.send-btn{width:46px;height:46px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--teal),var(--org));color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.send-btn:hover{transform:scale(1.05)}
+.sugg{margin-top:22px}
+.sugg h5{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;font-weight:700}
+.sugg-row{display:flex;flex-wrap:wrap;gap:10px}
+.s-chip{display:inline-flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:9px 16px;font-size:13px;color:var(--txt);transition:.15s}
+.s-chip:hover{border-color:var(--teal);color:var(--teal-b)}
+#chatLog{max-width:780px;margin:24px auto 0;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:88%;padding:14px 18px;border-radius:14px;font-size:14px;line-height:1.65}
+.msg.u{align-self:flex-end;background:var(--teal-d);color:#fff;border-bottom-right-radius:4px}
+.msg.b{align-self:flex-start;background:var(--s2);border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg.b a{color:var(--teal-b);font-weight:600}
+.msg.b a:hover{text-decoration:underline}
+.tool-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:rgba(20,184,166,.1);border:1px solid var(--teal);color:var(--teal-b);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600}
+.tool-link:hover{background:rgba(20,184,166,.2)}
+.typing{display:inline-flex;gap:5px;padding:4px 0}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:ty 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes ty{50%{opacity:.3;transform:translateY(-3px)}}
+
+/* Files / Media */
+.f-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0;flex-wrap:wrap}
+.f-search{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--muted)}
+.f-search input{background:none;border:none;outline:none;color:var(--txt);font-size:13.5px;width:100%}
+.btn-up{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--teal),var(--org));color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:13.5px;font-weight:700}
+.btn-up:hover{transform:translateY(-1px)}
+.f-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:6px}
+.f-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:.15s}
+.f-card:hover{border-color:#3a455c;transform:translateY(-2px)}
+.f-card .fi{font-size:30px;margin-bottom:12px}
+.f-card h4{font-size:14px;font-weight:600;margin-bottom:4px;word-break:break-all}
+.f-card p{font-size:12px;color:var(--muted)}
+.f-card .fa{display:flex;gap:8px;margin-top:12px}
+.mini-btn{flex:1;background:var(--s4);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:8px;font-size:12px;font-weight:600}
+.mini-btn:hover{border-color:var(--teal);color:var(--teal-b)}
+.mini-btn.danger:hover{border-color:#f87171;color:#f87171}
+.empty{margin:30px auto;max-width:640px;text-align:center;background:var(--surface);border:1px dashed #33405a;border-radius:18px;padding:56px 32px}
+.empty .eic{font-size:52px;margin-bottom:18px}
+.empty h3{font-family:var(--disp);font-size:21px;margin-bottom:10px}
+.empty p{color:var(--muted);font-size:13.5px;line-height:1.7;margin-bottom:24px}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tab{background:var(--s2);border:1px solid var(--border);color:var(--muted);border-radius:99px;padding:9px 20px;font-size:13px;font-weight:600}
+.tab.on{background:var(--teal);border-color:var(--teal);color:#04292a}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.m-card{background:var(--s2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.m-card img{width:100%;height:130px;object-fit:cover;display:block}
+.m-card .mi2{padding:10px 12px;font-size:12px}
+.m-card .mi2 b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-card .mi2 span{color:var(--muted)}
+
+/* Tools */
+.t-tabs{display:flex;gap:8px;margin:22px 0;flex-wrap:wrap}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.t-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:22px;text-align:left;color:var(--txt);transition:.18s;display:flex;flex-direction:column;gap:10px}
+.t-card:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.t-card .ti{width:46px;height:46px;border-radius:12px;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25);display:flex;align-items:center;justify-content:center;font-size:22px}
+.t-card h4{font-size:15px;font-weight:700}
+.t-card p{font-size:12.5px;color:var(--muted);line-height:1.6;flex:1}
+.t-card .go{font-size:12.5px;color:var(--teal-b);font-weight:700}
+.sugg-sec{margin-bottom:8px}
+.sugg-sec h5{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);font-weight:700;margin-bottom:14px}
+
+/* Account */
+.ac-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px;margin-top:24px;max-width:720px}
+.ac-top{display:flex;align-items:center;gap:20px;margin-bottom:28px}
+.ac-top .avatar{width:76px;height:76px;font-size:28px}
+.ac-top h3{font-family:var(--disp);font-size:22px;margin-bottom:4px}
+.ac-top p{color:var(--muted);font-size:13.5px}
+.ac-row{display:flex;align-items:center;justify-content:space-between;padding:15px 4px;border-top:1px solid var(--border);font-size:14px}
+.ac-row span:first-child{color:var(--muted)}
+.ac-row span:last-child{font-weight:600}
+.ac-rows{margin-top:6px}
+.ac-link{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;border-top:1px solid var(--border);padding:16px 4px;color:var(--txt);font-size:14px;font-weight:500;text-align:left}
+.ac-link:hover{color:var(--teal-b)}
+.btn-out{margin-top:24px;width:100%;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35);color:#f87171;border-radius:12px;padding:13px;font-size:14px;font-weight:700}
+.btn-out:hover{background:rgba(248,113,113,.16)}
+
+/* Mobile */
+.sb-toggle{display:none}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:none;box-shadow:20px 0 60px rgba(0,0,0,.5)}
+  .main{margin-left:0}
+  .sb-toggle{display:flex;position:fixed;bottom:22px;left:22px;z-index:60;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--org));border:none;color:#fff;font-size:22px;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .view{padding:20px}
+  .ob-grid{grid-template-columns:repeat(2,1fr)}
+  h1.vt{font-size:25px}
+  .topbar{padding:12px 16px}
+  .tb-search{min-width:0;flex:1}
+}
+</style>
+</head>
+<body style="background:#090e1c;margin:0">
+<!-- ================= ONBOARDING ================= -->
+<div id="onboarding">
+  <div class="ob-card">
+    <div class="ob-top">
+      <div class="ob-logo"><img src="/logo.png" alt="Novatix"> Novatix <span style="font-size:11px;background:rgba(20,184,166,.12);color:#4fdbc8;border:1px solid rgba(20,184,166,.3);padding:3px 10px;border-radius:99px;font-weight:700">PDF</span></div>
+      <div class="ob-steps">
+        <div class="ob-step on" data-s="1"><span class="n">1</span> Role</div>
+        <div class="ob-step" data-s="2"><span class="n">2</span> Cadence</div>
+        <div class="ob-step" data-s="3"><span class="n">3</span> Modules</div>
+      </div>
+    </div>
+    <div class="ob-bar"><i id="obBar" style="width:33%"></i></div>
+
+    <!-- STEP 1 -->
+    <div class="ob-pane" data-pane="1">
+      <div class="ob-kicker">Stage 1 of 3</div>
+      <div class="ob-h">Which describes you best?</div>
+      <p class="ob-p">We personalize your dashboard, suggested tools and shortcuts based on how you work.</p>
+      <div class="ob-grid" id="roleGrid">
+        <button class="ob-card-opt" data-v="business"><span class="tick">✓</span><div class="ic">💼</div><h4>Business Owner</h4><p>Agreements, invoices &amp; contracts</p></button>
+        <button class="ob-card-opt" data-v="freelancer"><span class="tick">✓</span><div class="ic">💻</div><h4>Freelancer / Solo</h4><p>Proposals, NDAs &amp; portfolios</p></button>
+        <button class="ob-card-opt" data-v="corporate"><span class="tick">✓</span><div class="ic">🏢</div><h4>Corporate Team</h4><p>Compliance &amp; bulk filings</p></button>
+        <button class="ob-card-opt" data-v="academic"><span class="tick">✓</span><div class="ic">🎓</div><h4>Academic / Student</h4><p>Research papers &amp; theses</p></button>
+        <button class="ob-card-opt" data-v="individual"><span class="tick">✓</span><div class="ic">👤</div><h4>Individual User</h4><p>Personal IDs, scans &amp; forms</p></button>
+        <button class="ob-card-opt" data-v="other"><span class="tick">✓</span><div class="ic">✨</div><h4>Specialist / Other</h4><p>Custom workflows</p></button>
+      </div>
+      <div class="ob-foot"><button class="ob-skip" data-skip>Skip for now</button><button class="btn-grad" id="obNext1" disabled>Continue to Step 2 →</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="ob-pane" data-pane="2" style="display:none">
+      <div class="ob-kicker">Stage 2 of 3</div>
+      <div class="ob-h">How often do you work with documents?</div>
+      <p class="ob-p">This helps us tune your daily limits and quick actions. <span style="color:#64748b">(optional)</span></p>
+      <div class="ob-rows" id="cadGrid">
+        <button class="ob-row" data-v="daily"><span class="dot"></span>Every day</button>
+        <button class="ob-row" data-v="weekly"><span class="dot"></span>A few times a week</button>
+        <button class="ob-row" data-v="monthly"><span class="dot"></span>A few times a month</button>
+        <button class="ob-row" data-v="rarely"><span class="dot"></span>Rarely</button>
+      </div>
+      <div class="ob-foot"><button class="ob-skip" data-skip>Skip for now</button><button class="btn-grad" id="obNext2">Continue to Step 3 →</button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="ob-pane" data-pane="3" style="display:none">
+      <div class="ob-kicker">Stage 3 of 3</div>
+      <div class="ob-h">What do you need to do with your files?</div>
+      <p class="ob-p">Pick all that apply — we'll pin these to your dashboard.</p>
+      <div class="ob-chips" id="needChips">
+        <button class="ob-chip" data-v="merge">Merge PDFs</button>
+        <button class="ob-chip" data-v="edit">Edit PDF</button>
+        <button class="ob-chip" data-v="convert">Convert files</button>
+        <button class="ob-chip" data-v="compress">Compress PDF</button>
+        <button class="ob-chip" data-v="images">PDF ↔ Images</button>
+        <button class="ob-chip" data-v="sign">Sign documents</button>
+        <button class="ob-chip" data-v="ocr">Recognize text (OCR)</button>
+        <button class="ob-chip" data-v="forms">Fill forms</button>
+        <button class="ob-chip" data-v="shrink">Reduce file size</button>
+        <button class="ob-chip" data-v="organize">Organize pages</button>
+      </div>
+      <div class="ob-foot"><button class="ob-skip" data-skip>Skip for now</button><button class="btn-grad" id="obFinish">Finish Setup &amp; Launch →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<button class="sb-toggle" id="sbToggle" aria-label="Menu">☰</button>
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="sb-logo"><img src="/logo.png" alt="Novatix"> Novatix</div>
+      <nav class="sb-nav">
+        <button class="sb-link on" data-view="ai-chat"><span class="mi">✨</span> AI Chat</button>
+        <button class="sb-link" data-view="my-files"><span class="mi">📁</span> My Files</button>
+        <button class="sb-link" data-view="media"><span class="mi">🎬</span> Media</button>
+        <button class="sb-link" data-view="tools"><span class="mi">🛠️</span> Tools</button>
+      </nav>
+    </div>
+    <button class="sb-profile" data-view="account">
+      <span class="avatar" id="sbAvatar">U</span>
+      <span><span class="nm" id="sbName">User</span><br><span class="em" id="sbEmail"></span></span>
+    </button>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-search">🔍 <input id="globalSearch" placeholder="Quick search tools & files..."></div>
+      <div class="tb-right">
+        <a class="tb-btn" href="/" title="Back to website" style="text-decoration:none">🏠</a>
+        <button class="tb-btn" id="tbAvatar" data-view="account" title="Account"><span class="avatar" id="tbAv" style="width:26px;height:26px;font-size:12px">U</span></button>
+      </div>
+    </div>
+    <!-- AI CHAT -->
+    <section class="view on" data-v="ai-chat">
+      <div class="crumbs">Dashboard <span>›</span> <b>AI Chat Assistant</b> <span class="pill" style="margin-left:8px"><span class="d"></span> Assistant Active</span></div>
+      <div style="text-align:center;max-width:640px;margin:8px auto 0">
+        <span class="pill">✨ Document Intelligence</span>
+        <h1 class="vt">Choose a tool or <span class="gr">describe your task</span></h1>
+        <p class="vsub" style="margin:0 auto">Tell me what you want to do with your documents in plain words — I'll point you to the right tool instantly.</p>
+      </div>
+      <div class="chat-box">
+        <div class="chat-glow"></div>
+        <div class="chat-in">
+          <textarea id="chatInput" rows="3" placeholder="Describe what you want to do... (e.g. 'merge these two PDFs' or 'make my PDF smaller')"></textarea>
+          <div class="chat-bar">
+            <div class="chat-tools">
+              <label class="chip-btn" for="chatFile">📎 Add file<input type="file" id="chatFile" accept=".pdf,.png,.jpg,.jpeg" hidden></label>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="chat-hint">Enter ↵ to send</span>
+              <button class="send-btn" id="chatSend" aria-label="Send">↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sugg" style="max-width:780px;margin-left:auto;margin-right:auto">
+        <h5>⚡ Suggested operations</h5>
+        <div class="sugg-row">
+          <button class="s-chip" data-ask="I want to compress a PDF">🗜️ Compress PDF</button>
+          <button class="s-chip" data-ask="I want to merge PDFs">📚 Merge PDF</button>
+          <button class="s-chip" data-ask="I want to split a PDF">✂️ Split PDF</button>
+          <button class="s-chip" data-ask="I want to convert PDF to images">🖼️ PDF to Images</button>
+          <button class="s-chip" data-ask="I want to add a watermark">💧 Watermark</button>
+        </div>
+      </div>
+      <div id="chatLog"></div>
+    </section>
+
+    <!-- MY FILES -->
+    <section class="view" data-v="my-files">
+      <div class="crumbs">Dashboard <span>›</span> <b>My Files</b></div>
+      <span class="pill"><span class="d"></span> Secure Document Vault</span>
+      <h1 class="vt">My Files</h1>
+      <p class="vsub">Files you upload here stay in your browser — private by design. Nothing is sent to any server.</p>
+      <div class="f-head">
+        <div class="f-search">🔍 <input id="fileSearch" placeholder="Search files..."></div>
+        <label class="btn-up" for="fileUpload">☁️ + Upload File<input type="file" id="fileUpload" multiple hidden></label>
+      </div>
+      <div id="fileEmpty" class="empty">
+        <div class="eic">📄</div>
+        <h3>Upload your first file to get started</h3>
+        <p>Drag &amp; drop any PDF or image here, or browse from your device.<br>Fast, private, and processed right in your browser.</p>
+        <label class="btn-grad" for="fileUpload2" style="cursor:pointer">📁 Browse Files<input type="file" id="fileUpload2" multiple hidden></label>
+      </div>
+      <div class="f-grid" id="fileGrid" style="display:none"></div>
+    </section>
+
+    <!-- MEDIA -->
+    <section class="view" data-v="media">
+      <div class="crumbs">Dashboard <span>›</span> <b>Media</b></div>
+      <span class="pill"><span class="d"></span> Media Library</span>
+      <h1 class="vt">Media</h1>
+      <p class="vsub">Your images in one place — ready to convert into PDFs or use with the image tools.</p>
+      <div class="tabs" id="mediaTabs">
+        <button class="tab on" data-t="all">All</button>
+        <button class="tab" data-t="image">Images</button>
+      </div>
+      <div class="f-head" style="margin-top:0">
+        <div></div>
+        <label class="btn-up" for="mediaUpload">☁️ + Upload Media<input type="file" id="mediaUpload" accept="image/*" multiple hidden></label>
+      </div>
+      <div id="mediaEmpty" class="empty">
+        <div class="eic">🎬</div>
+        <h3>No media files yet</h3>
+        <p>Upload images to convert them to PDF, or keep them organized here.</p>
+      </div>
+      <div class="m-grid" id="mediaGrid" style="display:none"></div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="view" data-v="tools">
+      <div class="crumbs">Dashboard <span>›</span> <b>Tools</b></div>
+      <span class="pill"><span class="d"></span> 8 High-Throughput Tools</span>
+      <h1 class="vt">All PDF Tools</h1>
+      <p class="vsub">Every tool runs 100% in your browser. No uploads, no waiting, no accounts needed beyond login.</p>
+      <div class="sugg-sec" style="margin-top:26px">
+        <h5>⚡ Suggested for you</h5>
+        <div class="t-grid" id="suggGrid"></div>
+      </div>
+      <div class="t-tabs" id="toolTabs">
+        <button class="tab on" data-t="all">All Tools</button>
+        <button class="tab" data-t="pdf">PDF Tools</button>
+        <button class="tab" data-t="image">Image Tools</button>
+      </div>
+      <div class="t-grid" id="toolGrid"></div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="view" data-v="account">
+      <div class="crumbs">Dashboard <span>›</span> <b>Account</b></div>
+      <span class="pill"><span class="d"></span> Account &amp; Settings</span>
+      <h1 class="vt">My Account</h1>
+      <div class="ac-card">
+        <div class="ac-top">
+          <span class="avatar" id="acAvatar">U</span>
+          <div><h3 id="acName">User</h3><p id="acEmail"></p></div>
+        </div>
+        <div class="ac-rows">
+          <div class="ac-row"><span>Name</span><span id="acName2">—</span></div>
+          <div class="ac-row"><span>Email</span><span id="acEmail2">—</span></div>
+          <div class="ac-row"><span>Plan</span><span style="color:#4fdbc8">Free forever</span></div>
+          <div class="ac-row"><span>Daily limit</span><span>50 operations / day</span></div>
+        </div>
+        <div style="margin-top:8px">
+          <a class="ac-link" href="/">🏠 <span style="flex:1;margin-left:10px">Back to PDF Tools</span> ›</a>
+          <a class="ac-link" href="https://novatix.agency/contact">❓ <span style="flex:1;margin-left:10px">Help &amp; support</span> ›</a>
+        </div>
+        <button class="btn-out" id="logoutBtn">Log Out</button>
+      </div>
+    </section>
+
+  </div><!-- /.main -->
+</div><!-- /#app -->
+<script>
+/* ================= Auth ================= */
+function getCookie(n){try{const m=document.cookie.match(new RegExp('(?:^|;\\s*)'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
+const TOKEN=getCookie('novatix_tool_token')||(function(){try{return localStorage.getItem('novatix_tool_token')||'';}catch(e){return '';}})();
+if(!TOKEN){ window.location.href='/login.html?next='+encodeURIComponent(window.location.href); }
+const U_NAME=getCookie('novatix_user_name')||'User';
+const U_EMAIL=getCookie('novatix_user_email')||'';
+const U_AVATAR=getCookie('novatix_user_avatar')||'';
+const U_INITIAL=(U_NAME||U_EMAIL||'U').trim().charAt(0).toUpperCase();
+function paintAvatar(el){ if(!el)return; if(U_AVATAR){el.innerHTML='';const i=document.createElement('img');i.src=U_AVATAR;i.alt='';el.appendChild(i);} else {el.textContent=U_INITIAL;} }
+['sbAvatar','tbAv','acAvatar'].forEach(id=>paintAvatar(document.getElementById(id)));
+document.getElementById('sbName').textContent=U_NAME;
+document.getElementById('sbEmail').textContent=U_EMAIL;
+document.getElementById('acName').textContent=U_NAME;
+document.getElementById('acName2').textContent=U_NAME;
+document.getElementById('acEmail').textContent=U_EMAIL;
+document.getElementById('acEmail2').textContent=U_EMAIL||'—';
+
+/* ================= Onboarding ================= */
+const OB_KEY='nv_onboard_done';
+let ob={step:1,role:null,cadence:null,needs:[]};
+function obShow(step){
+  ob.step=step;
+  document.querySelectorAll('.ob-pane').forEach(p=>p.style.display=p.dataset.pane==step?'block':'none');
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.toggle('on',+s.dataset.s===step));
+  document.getElementById('obBar').style.width=(step/3*100)+'%';
+}
+document.querySelectorAll('#roleGrid .ob-card-opt').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#roleGrid .ob-card-opt').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel'); ob.role=b.dataset.v;
+  document.getElementById('obNext1').disabled=false;
+}));
+document.querySelectorAll('#cadGrid .ob-row').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#cadGrid .ob-row').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel'); ob.cadence=b.dataset.v;
+}));
+document.querySelectorAll('#needChips .ob-chip').forEach(b=>b.addEventListener('click',()=>{
+  b.classList.toggle('sel');
+  const v=b.dataset.v;
+  ob.needs=b.classList.contains('sel')?[...ob.needs,v]:ob.needs.filter(x=>x!==v);
+}));
+document.getElementById('obNext1').addEventListener('click',()=>obShow(2));
+document.getElementById('obNext2').addEventListener('click',()=>obShow(3));
+function obFinish(){
+  try{localStorage.setItem(OB_KEY,JSON.stringify({done:true,role:ob.role,cadence:ob.cadence,needs:ob.needs,at:Date.now()}));}catch(e){}
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('ready');
+  buildSuggested();
+}
+document.getElementById('obFinish').addEventListener('click',obFinish);
+document.querySelectorAll('[data-skip]').forEach(b=>b.addEventListener('click',obFinish));
+let onboarded=false;
+try{onboarded=!!JSON.parse(localStorage.getItem(OB_KEY)||'null')?.done;}catch(e){}
+if(onboarded){ document.getElementById('onboarding').classList.add('hidden'); document.getElementById('app').classList.add('ready'); }
+
+/* ================= Navigation ================= */
+const sb=document.getElementById('sidebar');
+document.getElementById('sbToggle').addEventListener('click',()=>sb.classList.toggle('open'));
+function go(view){
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.toggle('on',l.dataset.view===view));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.v===view));
+  sb.classList.remove('open');
+  window.scrollTo({top:0});
+  try{history.replaceState(null,'','#'+view);}catch(e){}
+}
+document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();go(el.dataset.view);}));
+(function(){const h=(location.hash||'').replace('#','');if(h&&document.querySelector('.view[data-v="'+h+'"]'))go(h);})();
+
+/* ================= Tools data ================= */
+const TOOLS=[
+ {id:'merge',name:'Merge PDF',desc:'Combine multiple PDFs into one unified document, in any order.',icon:'📚',cat:'pdf'},
+ {id:'split',name:'Split PDF',desc:'Extract pages or split a PDF into separate files.',icon:'✂️',cat:'pdf'},
+ {id:'compress',name:'Compress PDF',desc:'Shrink PDF file size while keeping quality readable.',icon:'🗜️',cat:'pdf'},
+ {id:'pdf-to-images',name:'PDF to Images',desc:'Convert PDF pages into PNG/JPG images.',icon:'🖼️',cat:'image'},
+ {id:'images-to-pdf',name:'Images to PDF',desc:'Turn JPG/PNG images into a single PDF.',icon:'📄',cat:'image'},
+ {id:'rotate',name:'Rotate PDF',desc:'Rotate pages by 90°, 180° or 270°.',icon:'🔄',cat:'pdf'},
+ {id:'watermark',name:'PDF Watermark',desc:'Stamp custom text across PDF pages.',icon:'💧',cat:'pdf'},
+ {id:'page-numbers',name:'PDF Page Numbers',desc:'Add page numbers with custom position and style.',icon:'🔢',cat:'pdf'}
+];
+function toolCard(t){
+  const b=document.createElement('button');b.className='t-card';b.type='button';
+  b.innerHTML='<span class="ti">'+t.icon+'</span><h4>'+t.name+'</h4><p>'+t.desc+'</p><span class="go">Open tool →</span>';
+  b.addEventListener('click',()=>{window.location.href='/?tool='+t.id;});
+  return b;
+}
+function renderTools(filter){
+  const g=document.getElementById('toolGrid');g.innerHTML='';
+  TOOLS.filter(t=>filter==='all'||t.cat===filter).forEach(t=>g.appendChild(toolCard(t)));
+}
+document.querySelectorAll('#toolTabs .tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('#toolTabs .tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+  renderTools(t.dataset.t);
+}));
+renderTools('all');
+function buildSuggested(){
+  let needs=[];try{needs=JSON.parse(localStorage.getItem(OB_KEY)||'{}').needs||[];}catch(e){}
+  const map={merge:'merge',compress:'compress',shrink:'compress',images:'pdf-to-images',convert:'pdf-to-images',organize:'split',sign:'merge',ocr:'split',forms:'merge',edit:'merge'};
+  const ids=[...new Set(needs.map(n=>map[n]).filter(Boolean))].slice(0,3);
+  while(ids.length<3){const t=TOOLS[ids.length%TOOLS.length].id;if(!ids.includes(t))ids.push(t);}
+  const g=document.getElementById('suggGrid');g.innerHTML='';
+  ids.forEach(id=>{const t=TOOLS.find(x=>x.id===id);if(t)g.appendChild(toolCard(t));});
+}
+buildSuggested();
+
+/* ================= AI Chat (assistant) ================= */
+const log=document.getElementById('chatLog'), ci=document.getElementById('chatInput');
+function addMsg(html,who){
+  const d=document.createElement('div');d.className='msg '+who;d.innerHTML=html;
+  log.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function botReply(text){
+  const t=document.createElement('div');t.className='msg b';
+  t.innerHTML='<span class="typing"><i></i><i></i><i></i></span>';
+  log.appendChild(t);t.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(()=>{t.innerHTML=text;t.scrollIntoView({behavior:'smooth',block:'nearest'});},700);
+}
+function suggestTool(id,extra){
+  const t=TOOLS.find(x=>x.id===id);
+  return (extra||'')+'<br><a class="tool-link" href="/?tool='+id+'">'+t.icon+' Open '+t.name+' →</a>';
+}
+function answer(q){
+  q=q.toLowerCase();
+  if(/merge|combin|join|join|attach/.test(q)) return suggestTool('merge',"To combine PDFs into one file, use the <b>Merge PDF</b> tool — add files in any order and download the result.");
+  if(/split|extract page|separate|divide/.test(q)) return suggestTool('split',"To split a PDF or pull out specific pages, use <b>Split PDF</b>.");
+  if(/compress|smaller|reduce size|shrink|too big|large/.test(q)) return suggestTool('compress',"To make your PDF smaller, use <b>Compress PDF</b> — it shrinks file size while keeping pages readable.");
+  if(/image.*pdf|pdf.*image|png|jpg|picture/.test(q)){
+    if(/to pdf|into pdf/.test(q)) return suggestTool('images-to-pdf',"To turn images into a PDF, use <b>Images to PDF</b>.");
+    return suggestTool('pdf-to-images',"To convert PDF pages to images, use <b>PDF to Images</b>.");
+  }
+  if(/watermark|stamp|logo/.test(q)) return suggestTool('watermark',"To stamp text across pages, use the <b>PDF Watermark</b> tool.");
+  if(/rotate|sideways|upside/.test(q)) return suggestTool('rotate',"To fix page orientation, use <b>Rotate PDF</b>.");
+  if(/page number|numbering/.test(q)) return suggestTool('page-numbers',"To add page numbers, use the <b>PDF Page Numbers</b> tool.");
+  if(/sign/.test(q)) return "Digital signatures are coming soon! For now, you can add a text stamp with the <b>PDF Watermark</b> tool."+'<br><a class="tool-link" href="/?tool=watermark">💧 Open Watermark →</a>';
+  if(/^(hi|hello|hey|salam|aoa)\b/.test(q)) return "Hello "+U_NAME.split(' ')[0]+"! 👋 Tell me what you want to do with a PDF — for example <i>'merge two PDFs'</i> or <i>'compress this file'</i>.";
+  if(/thank|shukriya/.test(q)) return "You're welcome! 😊 Anything else I can help with?";
+  return "I can help you with PDFs! Try asking me to <b>merge</b>, <b>split</b>, <b>compress</b>, <b>rotate</b>, <b>watermark</b>, or <b>convert</b> your files — or pick a tool below.<br><a class='tool-link' href='/?tool=merge'>📚 Merge PDF →</a> <a class='tool-link' href='/?tool=compress'>🗜️ Compress PDF →</a>";
+}
+function sendChat(text){
+  text=(text||ci.value).trim();if(!text)return;
+  addMsg(text.replace(/</g,'&lt;'),'u');ci.value='';
+  botReply(answer(text));
+}
+document.getElementById('chatSend').addEventListener('click',()=>sendChat());
+ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+document.querySelectorAll('.s-chip').forEach(c=>c.addEventListener('click',()=>sendChat(c.dataset.ask)));
+document.getElementById('chatFile').addEventListener('change',e=>{
+  if(e.target.files.length){addMsg('📎 Attached: <b>'+e.target.files[0].name+'</b>','u');botReply("Got your file! What should I do with it — <b>compress</b>, <b>split</b>, <b>convert to images</b>?");}
+  e.target.value='';
+});
+
+/* ================= My Files ================= */
+const F_KEY='nv_dash_files';
+let files=[];try{files=JSON.parse(localStorage.getItem(F_KEY)||'[]');}catch(e){}
+const fileBlobs={};
+function saveFiles(){try{localStorage.setItem(F_KEY,files);}catch(e){}}
+function fIcon(n){n=n.toLowerCase();if(n.endsWith('.pdf'))return '📕';if(/png|jpg|jpeg|gif|webp/.test(n))return '🖼️';return '📄';}
+function fmtSize(b){if(b>1048576)return (b/1048576).toFixed(1)+' MB';if(b>1024)return (b/1024).toFixed(0)+' KB';return b+' B';}
+function renderFiles(q){
+  const g=document.getElementById('fileGrid'),e=document.getElementById('fileEmpty');
+  const list=files.filter(f=>!q||f.name.toLowerCase().includes(q.toLowerCase()));
+  e.style.display=files.length?'none':'block';g.style.display=files.length?'grid':'none';
+  g.innerHTML='';
+  list.forEach((f,idx)=>{
+    const d=document.createElement('div');d.className='f-card';
+    d.innerHTML='<div class="fi">'+fIcon(f.name)+'</div><h4>'+f.name.replace(/</g,'&lt;')+'</h4><p>'+fmtSize(f.size)+' · '+new Date(f.at).toLocaleDateString()+'</p><div class="fa"><button class="mini-btn" data-a="dl">⬇ Download</button><button class="mini-btn danger" data-a="del">Delete</button></div>';
+    d.querySelector('[data-a="dl"]').addEventListener('click',()=>{
+      const blob=fileBlobs[f.id];
+      if(blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=f.name;a.click();}
+      else alert('This file was added in an earlier session — please re-upload it to download.');
+    });
+    d.querySelector('[data-a="del"]').addEventListener('click',()=>{
+      files=files.filter(x=>x.id!==f.id);delete fileBlobs[f.id];saveFiles();renderFiles(document.getElementById('fileSearch').value);
+    });
+    g.appendChild(d);
+  });
+}
+function addFiles(input){
+  [...input.files].forEach(fl=>{
+    const id='f'+Date.now()+Math.random().toString(36).slice(2,7);
+    files.unshift({id,name:fl.name,size:fl.size,at:Date.now()});
+    fileBlobs[id]=fl;
+  });
+  saveFiles();renderFiles('');input.value='';
+  if(files.length)go('my-files');
+}
+['fileUpload','fileUpload2'].forEach(id=>document.getElementById(id).addEventListener('change',e=>addFiles(e.target)));
+document.getElementById('fileSearch').addEventListener('input',e=>renderFiles(e.target.value));
+renderFiles('');
+
+/* ================= Media ================= */
+const M_KEY='nv_dash_media';
+let media=[];try{media=JSON.parse(localStorage.getItem(M_KEY)||'[]');}catch(e){}
+const mediaBlobs={};
+function renderMedia(tab){
+  const g=document.getElementById('mediaGrid'),e=document.getElementById('mediaEmpty');
+  const list=media.filter(m=>tab==='all'||m.kind===tab);
+  e.style.display=media.length?'none':'block';g.style.display=media.length?'grid':'none';
+  g.innerHTML='';
+  list.forEach(m=>{
+    const d=document.createElement('div');d.className='m-card';
+    const url=mediaBlobs[m.id]?URL.createObjectURL(mediaBlobs[m.id]):'';
+    d.innerHTML=(url?'<img src="'+url+'" alt="">':'<div style="height:130px;display:flex;align-items:center;justify-content:center;font-size:40px;background:#161b2a">🖼️</div>')+'<div class="mi2"><b>'+m.name.replace(/</g,'&lt;')+'</b><span>'+fmtSize(m.size)+'</span></div>';
+    g.appendChild(d);
+  });
+}
+document.getElementById('mediaUpload').addEventListener('change',e=>{
+  [...e.target.files].forEach(fl=>{
+    const id='m'+Date.now()+Math.random().toString(36).slice(2,7);
+    media.unshift({id,name:fl.name,size:fl.size,kind:'image',at:Date.now()});
+    mediaBlobs[id]=fl;
+  });
+  try{localStorage.setItem(M_KEY,media);}catch(err){}
+  renderMedia(document.querySelector('#mediaTabs .tab.on').dataset.t);e.target.value='';
+});
+document.querySelectorAll('#mediaTabs .tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('#mediaTabs .tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+  renderMedia(t.dataset.t);
+}));
+renderMedia('all');
+
+/* ================= Global search ================= */
+document.getElementById('globalSearch').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const q=e.target.value.trim().toLowerCase();if(!q)return;
+  const t=TOOLS.find(t=>(t.name+' '+t.desc).toLowerCase().includes(q));
+  if(t){window.location.href='/?tool='+t.id;}
+  else{go('tools');}
+});
+
+/* ================= Logout ================= */
+document.getElementById('logoutBtn').addEventListener('click',()=>{
+  ['novatix_tool_token','novatix_user_name','novatix_user_email','novatix_user_avatar'].forEach(k=>{
+    document.cookie=k+'=; path=/; domain=.novatix.agency; max-age=0; secure; samesite=lax';
+    document.cookie=k+'=; path=/; max-age=0; secure; samesite=lax';
+  });
+  try{localStorage.removeItem('novatix_tool_token');}catch(e){}
+  fetch('https://novatix.agency/api/v1/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',token:TOKEN})}).catch(()=>{});
+  window.location.href='/';
+});
+</script>
+</body>
+</html>
